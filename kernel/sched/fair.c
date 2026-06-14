@@ -55,8 +55,8 @@
  *
  * (default: 6ms * (1 + ilog(ncpus)), units: nanoseconds)
  */
-unsigned int sysctl_sched_latency			= 3000000ULL;
-unsigned int normalized_sysctl_sched_latency		= 3000000ULL;
+unsigned int sysctl_sched_latency			= 24000000ULL;
+unsigned int normalized_sysctl_sched_latency		= 24000000ULL;
 
 /*
  * Enable/disable honoring sync flag in energy-aware wakeups.
