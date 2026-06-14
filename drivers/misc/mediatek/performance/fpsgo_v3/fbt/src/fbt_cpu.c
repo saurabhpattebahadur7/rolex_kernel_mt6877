@@ -5173,7 +5173,7 @@ int __init fbt_cpu_init(void)
 	/* t2wnt = target_time * (1+x) + quota * y_p, if quota > 0 */
 	/* t2wnt = target_time * (1+x) + quota * y_n, if quota < 0 */
 	qr_enable = fbt_get_default_qr_enable();
-	qr_t2wnt_x = DEFAULT_QR_T2WNT_X;
+	qr_t2wnt_x = 5;
 	qr_t2wnt_y_p = DEFAULT_QR_T2WNT_Y_P;
 	qr_t2wnt_y_n = DEFAULT_QR_T2WNT_Y_N;
 	qr_hwui_hint = DEFAULT_QR_HWUI_HINT;
