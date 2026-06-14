@@ -285,7 +285,7 @@
 
 #include <perf_tracker_internal.h>
 
-int sysctl_tcp_min_tso_segs __read_mostly = 2;
+int sysctl_tcp_min_tso_segs __read_mostly = 4;
 
 int sysctl_tcp_autocorking __read_mostly = 1;
 
@@ -3637,9 +3637,9 @@ static void __init tcp_init_mem(void)
 	unsigned long limit = nr_free_buffer_pages() / 16;
 
 	limit = max(limit, 128UL);
-	sysctl_tcp_mem[0] = limit / 4 * 3;		/* 4.68 % */
-	sysctl_tcp_mem[1] = limit;			/* 6.25 % */
-	sysctl_tcp_mem[2] = sysctl_tcp_mem[0] * 2;	/* 9.37 % */
+	sysctl_tcp_mem[0] = limit;
+	sysctl_tcp_mem[1] = limit * 2;         
+	sysctl_tcp_mem[2] = limit * 3;         
 }
 
 void __init tcp_init(void)
@@ -3707,12 +3707,12 @@ void __init tcp_init(void)
 	max_rshare = min(6UL*1024*1024, limit);
 
 	sysctl_tcp_wmem[0] = SK_MEM_QUANTUM;
-	sysctl_tcp_wmem[1] = 16*1024;
-	sysctl_tcp_wmem[2] = max(64*1024, max_wshare);
+	sysctl_tcp_wmem[1] = 131072;
+	sysctl_tcp_wmem[2] = max(4194304, max_wshare);
 
 	sysctl_tcp_rmem[0] = SK_MEM_QUANTUM;
-	sysctl_tcp_rmem[1] = 87380;
-	sysctl_tcp_rmem[2] = max(87380, max_rshare);
+	sysctl_tcp_rmem[1] = 262144;
+	sysctl_tcp_rmem[2] = max(4194304, max_rshare);
 
 	pr_info("Hash tables configured (established %u bind %u)\n",
 		tcp_hashinfo.ehash_mask + 1, tcp_hashinfo.bhash_size);
