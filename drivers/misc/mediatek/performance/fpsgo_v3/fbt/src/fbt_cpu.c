@@ -80,13 +80,13 @@
 #define TIME_2MS  2000000
 #define TIME_1MS  1000000
 #define TARGET_UNLIMITED_FPS 240
-#define TARGET_DEFAULT_FPS 60
+#define TARGET_DEFAULT_FPS 120
 #define FBTCPU_SEC_DIVIDER 1000000000
 #define NSEC_PER_HUSEC 100000
 #define TIME_MS_TO_NS  1000000ULL
 #define MAX_DEP_NUM 30
 #define LOADING_WEIGHT 50
-#define DEF_RESCUE_PERCENT 33
+#define DEF_RESCUE_PERCENT 45
 #define DEF_RESCUE_NS_TH 0
 #define INVALID_NUM -1
 #define DEFAULT_QR_T2WNT_X 0
@@ -5131,11 +5131,11 @@ int __init fbt_cpu_init(void)
 	bhr_opp_l = fbt_get_l_min_bhropp();
 	rescue_opp_c = (NR_FREQ_CPU - 1);
 	rescue_opp_f = 5;
-	rescue_percent = DEF_RESCUE_PERCENT;
-	min_rescue_percent = 10;
-	short_rescue_ns = DEF_RESCUE_NS_TH;
-	short_min_rescue_p = 0;
-	run_time_percent = 50;
+	rescue_percent = 45;
+	min_rescue_percent = 20;
+	short_rescue_ns = 1000000;
+	short_min_rescue_p = 10;
+	run_time_percent = 40;
 	deqtime_bound = TIME_3MS;
 	variance = 40;
 	floor_bound = 3;
@@ -5143,8 +5143,8 @@ int __init fbt_cpu_init(void)
 	floor_opp = 2;
 	loading_th = 0;
 	sampling_period_MS = 256;
-	rescue_enhance_f = 25;
-	rescue_second_enhance_f = 100;
+	rescue_enhance_f = 35;
+	rescue_second_enhance_f = 125;
 	loading_adj_cnt = fbt_get_default_adj_count();
 	loading_debnc_cnt = 30;
 	loading_time_diff = fbt_get_default_adj_tdiff();
@@ -5153,10 +5153,10 @@ int __init fbt_cpu_init(void)
 	uboost_enhance_f = fbt_get_default_uboost();
 	cm_big_cap = 95;
 	cm_tdiff = TIME_1MS;
-	rescue_second_time = 2;
+	rescue_second_time = 1;
 	rescue_second_copp = NR_FREQ_CPU - 1;
 
-	_gdfrc_fps_limit = TARGET_DEFAULT_FPS;
+	_gdfrc_fps_limit = 120;
 	vsync_period = GED_VSYNC_MISS_QUANTUM_NS;
 
 	fbt_idleprefer_enable = 1;
@@ -5181,7 +5181,7 @@ int __init fbt_cpu_init(void)
 	qr_mod_frame = 1;
 	qr_debug = 0;
 
-	gcc_enable = fbt_get_default_gcc_enable();
+	gcc_enable = 0;
 	gcc_reserved_up_quota_pct = DEFAULT_GCC_RESERVED_UP_QUOTA_PCT;
 	gcc_reserved_down_quota_pct = DEFAULT_GCC_RESERVED_DOWN_QUOTA_PCT;
 	gcc_window_size = DEFAULT_GCC_WINDOW_SIZE;
