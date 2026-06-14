@@ -20,8 +20,8 @@
 
 #include "rt_ext.c"
 
-int sched_rr_timeslice = RR_TIMESLICE;
-int sysctl_sched_rr_timeslice = (MSEC_PER_SEC / HZ) * RR_TIMESLICE;
+int sched_rr_timeslice = RR_TIMESLICE / 2;
+int sysctl_sched_rr_timeslice = (MSEC_PER_SEC / HZ) * RR_TIMESLICE / 2;
 
 static int do_sched_rt_period_timer(struct rt_bandwidth *rt_b, int overrun);
 
@@ -779,8 +779,8 @@ balanced:
 		 * sched:  prevent normal task could run anymore,
 		 * use rt_disable_borrow
 		 */
-		/* rt_rq->rt_runtime = RUNTIME_INF; */
-		rt_rq->rt_runtime = rt_b->rt_runtime;
+		rt_rq->rt_runtime = RUNTIME_INF;
+		// rt_rq->rt_runtime = rt_b->rt_runtime;
 
 		/* sched: print __disable_runtime unthrottled */
 		if (rt_rq->rt_throttled == 1)
