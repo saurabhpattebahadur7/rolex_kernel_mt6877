@@ -3433,11 +3433,11 @@ static void __mt_gpufreq_init_table(void)
 
 	/* determine max_opp/num/segment_table... by segment  */
 	if (segment_id == MT6877_SEGMENT)
-		g_segment_max_opp_idx = 4;
+		g_segment_max_opp_idx = 0;
 	else if (segment_id == MT6877T_SEGMENT)
 		g_segment_max_opp_idx = 0;
 	else
-		g_segment_max_opp_idx = 4;
+		g_segment_max_opp_idx = 0;
 
 	g_segment_min_opp_idx = NUM_OF_OPP_IDX - 1;
 
