@@ -28,8 +28,8 @@
  * (0, 0) -> DVFS disable
  **************************************************/
 #define MT_GPUFREQ_DVFS_ENABLE          1
-#define MT_GPUFREQ_CUST_CONFIG          0
-#define MT_GPUFREQ_CUST_INIT_OPP        (g_opp_table_segment_1[16].gpufreq_khz)
+#define MT_GPUFREQ_CUST_CONFIG          1
+#define MT_GPUFREQ_CUST_INIT_OPP        (g_opp_table_segment_1[0].gpufreq_khz)
 
 /**************************************************
  * DVFS Setting
