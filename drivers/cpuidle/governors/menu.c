@@ -176,16 +176,10 @@ static inline int performance_multiplier(unsigned long nr_iowaiters, unsigned lo
 	int mult = 1;
 
 	/* for higher loadavg, we are more reluctant */
-
-	/*
-	 * this doesn't work as intended - it is almost always 0, but can
-	 * sometimes, depending on workload, spike very high into the hundreds
-	 * even when the average cpu load is under 10%.
-	 */
-	/* mult += 2 * get_loadavg(); */
+	mult += get_loadavg(load) / 5;
 
 	/* for IO wait tasks (per cpu!) we add 5x each */
-	mult += 10 * nr_iowaiters;
+	mult += 5 * nr_iowaiters;
 
 	return mult;
 }
@@ -324,9 +318,12 @@ static int menu_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
 	 * operands are 32 bits.
 	 * Make sure to round up for half microseconds.
 	 */
-	data->predicted_us = DIV_ROUND_CLOSEST_ULL((uint64_t)data->next_timer_us *
+		data->predicted_us = DIV_ROUND_CLOSEST_ULL((uint64_t)data->next_timer_us *
 					 data->correction_factor[data->bucket],
 					 RESOLUTION * DECAY);
+
+	/* Aggressive: underestimate idle time for deeper sleep */
+	data->predicted_us = data->predicted_us * 8 / 10;
 
 	expected_interval = get_typical_interval(data);
 	expected_interval = min(expected_interval, data->next_timer_us);
@@ -369,7 +366,12 @@ static int menu_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
 		 * Use the performance multiplier and the user-configurable
 		 * latency_req to determine the maximum exit latency.
 		 */
-		interactivity_req = data->predicted_us / performance_multiplier(nr_iowaiters, cpu_load);
+	interactivity_req = data->predicted_us / performance_multiplier(nr_iowaiters, cpu_load);
+
+		/* Aggressive: cap interactivity to force deeper states */
+		if (interactivity_req > 1000)
+			interactivity_req = 1000;
+
 		if (latency_req > interactivity_req)
 			latency_req = interactivity_req;
 	}
