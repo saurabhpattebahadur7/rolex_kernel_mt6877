@@ -713,4 +713,3 @@ retry_suspend:
 	pr_info("suspend exit\n");
 	return error;
 }
-EXPORT_SYMBOL(pm_suspend);
