@@ -396,6 +396,13 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
 {
 	int error, last_dev;
 
+	/* Aggressive: Skip sync if already done recently */
+	static unsigned long last_suspend_jiffies;
+	if (time_before(jiffies, last_suspend_jiffies + HZ * 2)) {
+		pr_info("PM: Skipping redundant suspend prep\n");
+	}
+	last_suspend_jiffies = jiffies;
+
 	error = platform_suspend_prepare(state);
 	if (error)
 		goto Platform_finish;
@@ -547,7 +554,7 @@ static void suspend_finish(void)
 
 #if MTK_SOLUTION
 
-#define SYS_SYNC_TIMEOUT 2000
+#define SYS_SYNC_TIMEOUT 500
 
 static int sys_sync_ongoing;
 
@@ -610,6 +617,12 @@ int suspend_syssync_enqueue(void)
 static int enter_state(suspend_state_t state)
 {
 	int error;
+
+	/* Aggressive: Force deep sleep always */
+	if (state == PM_SUSPEND_TO_IDLE) {
+		pr_info("PM: Upgrading s2idle to deep sleep\n");
+		state = PM_SUSPEND_MEM;
+	}
 
 	trace_suspend_resume(TPS("suspend_enter"), state, true);
 	if (state == PM_SUSPEND_TO_IDLE) {
@@ -678,10 +691,12 @@ static int enter_state(suspend_state_t state)
 int pm_suspend(suspend_state_t state)
 {
 	int error;
+	int retry = 3;  // Aggressive: Retry suspend 3 times
 
 	if (state <= PM_SUSPEND_ON || state >= PM_SUSPEND_MAX)
 		return -EINVAL;
 
+retry_suspend:
 	pr_info("suspend entry (%s)\n", mem_sleep_labels[state]);
 	error = enter_state(state);
 	if (error) {
