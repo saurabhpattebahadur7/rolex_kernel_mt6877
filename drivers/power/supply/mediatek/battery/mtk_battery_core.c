@@ -372,7 +372,7 @@ void zcv_filter_init(struct zcv_filter *zf)
 	zf->lidx = -1;
 	zf->size = 0;
 	zf->zcvtime = 16 * 60;
-	zf->zcvcurrent = 20;
+	zf->zcvcurrent = 10;
 }
 
 int zcv_add(struct zcv_filter *zf, int car, struct timespec *t)
