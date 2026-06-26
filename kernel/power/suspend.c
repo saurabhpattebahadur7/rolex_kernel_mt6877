@@ -702,6 +702,11 @@ retry_suspend:
 	if (error) {
 		suspend_stats.fail++;
 		dpm_save_failed_errno(error);
+		if (retry-- > 0) {
+			pr_info("PM: Retry suspend, attempts left: %d\n", retry);
+			msleep(100);
+			goto retry_suspend;
+		}
 	} else {
 		suspend_stats.success++;
 	}
