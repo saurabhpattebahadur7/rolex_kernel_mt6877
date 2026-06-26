@@ -152,9 +152,9 @@ static int ladder_enable_device(struct cpuidle_driver *drv,
 		lstate->threshold.promotion_count = PROMOTION_COUNT;
 		lstate->threshold.demotion_count = DEMOTION_COUNT;
 
-	    if (i < drv->state_count - 1)
-			lstate->threshold.promotion_time = state->exit_latency / 2;
-		if (i > first_idx)
+	if (i < drv->state_count - 1)
+		lstate->threshold.promotion_time = state->exit_latency / 2;
+    if (i > first_idx)
 			lstate->threshold.demotion_time = state->exit_latency * 2;
 	}
 
